@@ -1,5 +1,6 @@
 package com.example.lesson_manager.models
 
+import java.io.File
 import java.io.Serializable
 
 class Fichier (
@@ -7,7 +8,7 @@ class Fichier (
     val name:String,
     val description: String,
     val type:String,
-    val folder:String
+    val path:String
             ) : Serializable {
     companion object {
         const val FILE_ID = "id"
@@ -17,3 +18,8 @@ class Fichier (
         const val FILE_FOLDER = "folder"
     }
 }
+
+/*
+val rootF = File(path)
+val files = rootF.listFiles()
+*/

@@ -36,13 +36,10 @@ class FolderListActivity : AppCompatActivity() {
         if(!dir.exists()) {
             dir.mkdirs()
         }
-        Toast.makeText(applicationContext, ROOT_DIRECTORY.absolutePath, Toast.LENGTH_SHORT).show()
         populateRecyclerFolder(ROOT_DIRECTORY.absolutePath)
     }
 
     private fun populateRecyclerFolder (path:String) {
-        val rootF = File(path)
-/*        val files = rootF.listFiles()*/
 
         list = findViewById<RecyclerView>(R.id.folder_list)
 
