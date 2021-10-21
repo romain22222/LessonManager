@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.lesson_manager.R
 import com.example.lesson_manager.models.Fichier
 
-abstract class FolderAdapter(private val folders : List<Fichier>) :
+abstract class FolderAdapter(val folders : MutableList<Fichier>) :
     RecyclerView.Adapter<FolderAdapter.FolderHolder>(){
     class FolderHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name = itemView.findViewById<TextView>(R.id.folder_name)
@@ -27,6 +27,7 @@ abstract class FolderAdapter(private val folders : List<Fichier>) :
 
     override fun onBindViewHolder(holder: FolderHolder, position: Int) {
         holder.name.text = folders[position].name
+        holder.name.tag = folders[position].id
         if (folders[position].type == "folder") {
             holder.typeImage.setImageResource(R.drawable.folder)
         } else if (folders[position].type == "file") {
@@ -37,4 +38,6 @@ abstract class FolderAdapter(private val folders : List<Fichier>) :
     override fun getItemCount(): Int {
         return folders.size
     }
+
+    fun updateData() {}
 }

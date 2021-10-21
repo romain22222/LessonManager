@@ -1,9 +1,10 @@
 package com.example.lesson_manager.activity
 
+import android.R.attr.data
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
-import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lesson_manager.R
@@ -24,14 +25,6 @@ class FolderListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        files.add(
-            Fichier(1,"TestNom", "Ceci est une description", "folder", ROOT_DIRECTORY.absolutePath+"/test"))
-        setContentView(R.layout.activity_folder)
-        files.add(
-            Fichier(2,"TestNom", "Ceci est une description", "folder", ROOT_DIRECTORY.absolutePath+"/test"))
-        setContentView(R.layout.activity_folder)
-        files.add(
-            Fichier(3,"TestNom", "Ceci est une description", "file", ROOT_DIRECTORY.absolutePath+"/test"))
         setContentView(R.layout.activity_folder)
         if(!dir.exists()) {
             dir.mkdirs()
@@ -40,12 +33,25 @@ class FolderListActivity : AppCompatActivity() {
     }
 
     private fun populateRecyclerFolder (path:String) {
-
+        files = Fichier("", "", "folder", path).getChildrenOfFolder()
         list = findViewById<RecyclerView>(R.id.folder_list)
-
         list.adapter = object : FolderAdapter(files) {
             override fun onItemClick(view: View) {
-                TODO("Not yet implemented")
+                val textAndId = view.findViewById<TextView>(R.id.folder_name)
+                val clickedFile = this.folders.first {it.name == textAndId.text}
+                if (clickedFile.type == Fichier.TYPE_FOLDER) {
+
+                    this.folders.clear()
+                    val newList: ArrayList<Fichier> = clickedFile.getChildrenOfFolder()
+                    this.folders.addAll(newList)
+                    // TODO : 1 changer le titre de l'activity pour coller au dossier
+                    //        2 pouvoir revenir en arrière via le bouton retour / un autre bouton ?
+
+                    this.notifyDataSetChanged()
+                }
+                else if (clickedFile.type == Fichier.TYPE_FILE) {
+                    val test = "nothing"
+                }
             }
 
             override fun onLongItemClick(view: View): Boolean {
