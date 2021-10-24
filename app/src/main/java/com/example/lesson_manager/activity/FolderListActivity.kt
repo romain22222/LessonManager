@@ -1,9 +1,9 @@
 package com.example.lesson_manager.activity
 
-import android.R.attr.data
 import android.os.Bundle
 import android.os.Environment
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -29,25 +29,37 @@ class FolderListActivity : AppCompatActivity() {
         if(!dir.exists()) {
             dir.mkdirs()
         }
-        populateRecyclerFolder(ROOT_DIRECTORY.absolutePath)
+        populateRecyclerFolder()
     }
 
-    private fun populateRecyclerFolder (path:String) {
+    private fun populateRecyclerFolder () {
+        val toolBarLeft = findViewById<ImageView>(R.id.logo_return_button)
+        val toolBarRight = findViewById<TextView>(R.id.topBarText)
+        val path: String = if (dir.absolutePath.length >= ROOT_DIRECTORY.absolutePath.length) dir.absolutePath else ROOT_DIRECTORY.absolutePath
+        if (path == ROOT_DIRECTORY.absolutePath) {
+            toolBarLeft.isClickable = false
+            toolBarLeft.setImageResource(R.drawable.logo)
+            toolBarRight.text = getText(R.string.baseHead)
+        } else {
+            toolBarLeft.isClickable = true
+            toolBarLeft.setImageResource(R.drawable.return_button)
+            toolBarRight.text = path.substring(path.lastIndexOf("/")+1)
+            toolBarLeft.setOnClickListener{
+                dir = File(dir.parent as String)
+                populateRecyclerFolder()
+            }
+        }
         files = Fichier("", "", "folder", path).getChildrenOfFolder()
         list = findViewById<RecyclerView>(R.id.folder_list)
         list.adapter = object : FolderAdapter(files) {
             override fun onItemClick(view: View) {
                 val textAndId = view.findViewById<TextView>(R.id.folder_name)
-                val clickedFile = this.folders.first {it.name == textAndId.text}
+                val clickedFile = folders.first {it.name == textAndId.text}
                 if (clickedFile.type == Fichier.TYPE_FOLDER) {
-
-                    this.folders.clear()
-                    val newList: ArrayList<Fichier> = clickedFile.getChildrenOfFolder()
-                    this.folders.addAll(newList)
-                    // TODO : 1 changer le titre de l'activity pour coller au dossier
-                    //        2 pouvoir revenir en arrière via le bouton retour / un autre bouton ?
-
-                    this.notifyDataSetChanged()
+                    dir = File(clickedFile.path)
+                    folders.clear()
+                    populateRecyclerFolder()
+                    notifyDataSetChanged()
                 }
                 else if (clickedFile.type == Fichier.TYPE_FILE) {
                     val test = "nothing"
@@ -57,6 +69,14 @@ class FolderListActivity : AppCompatActivity() {
             override fun onLongItemClick(view: View): Boolean {
                 TODO("Not yet implemented")
             }
+        }
+    }
+    override fun onBackPressed() {
+        if (dir.absolutePath != ROOT_DIRECTORY.absolutePath) {
+            dir = File(dir.parent as String)
+            populateRecyclerFolder()
+        } else {
+            super.onBackPressed()
         }
     }
 }

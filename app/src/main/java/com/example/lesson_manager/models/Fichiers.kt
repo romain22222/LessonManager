@@ -1,9 +1,7 @@
 package com.example.lesson_manager.models
 
-import android.widget.Toast
 import java.io.File
 import java.io.Serializable
-import java.lang.Error
 
 class Fichier (
     var name:String,
