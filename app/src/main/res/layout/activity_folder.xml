@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity">
+    tools:context=".activity.FolderListActivity">
 
     <LinearLayout
         android:id="@+id/viewTotal"
@@ -62,6 +62,7 @@
         android:layout_gravity="bottom|center"
         android:layout_margin="16dp"
         android:src="@drawable/add_file_icon"
-        android:tint="@color/white" />
+        android:tint="@color/white"
+        android:onClick="showPopup"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -79,4 +79,24 @@ class FolderListActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+    // TODO : Faire une autre activity qui contient le menu : https://developer.android.com/guide/topics/ui/menus.html#PopupMenu
+//    fun showPopup(v:View) {
+//        PopupMenu(this,v).apply {
+//            setOnMenuItemClickListener(this@FolderListActivity)
+//            inflate(R.menu.menu_new_fichier)
+//            show()
+//    }
+//    override fun onMenuItemClick(item: MenuItem): Boolean {
+//        return when (item.itemId) {
+//            R.id.new_folder -> {
+//                Toast.makeText(applicationContext,"NOUVEAU DOSSIER",Toast.LENGTH_SHORT).show()
+//                true
+//            }
+//            R.id.new_file -> {
+//                Toast.makeText(applicationContext,"NOUVEAU FICHIER",Toast.LENGTH_SHORT).show()
+//                true
+//            }
+//            else -> false
+//        }
+//    }
 }
