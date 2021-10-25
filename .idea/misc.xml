@@ -11,6 +11,9 @@
         <entry key="..\:/Users/DELL/Documents/L3/Lesson_Manager/app/src/main/res/drawable/add_icon.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/DELL/Documents/L3/Lesson_Manager/app/src/main/res/drawable/logo.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/DELL/Documents/L3/Lesson_Manager/app/src/main/res/layout/activity_main.xml" value="0.20520833333333333" />
+        <entry key="app/src/main/res/layout/activity_folder.xml" value="0.15070921985815602" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/item_folder.xml" value="0.15070921985815602" />
       </map>
     </option>
   </component>
