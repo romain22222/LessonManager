@@ -8,6 +8,8 @@ import android.provider.MediaStore
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.lesson_manager.R
 import com.example.lesson_manager.models.Fichier
 
@@ -22,11 +24,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        folder= intent.getSerializableExtra(FolderListActivity.EXTRA_FOLDER) as Fichier
+        folder= intent.getSerializableExtra(FolderListActivity.dir.absolutePath) as Fichier
 
-        findViewById<TextView>(R.id.title).text = folder.name;
-        findViewById<TextView>(R.id.description).text = folder.description;
-        findViewById<TextView>(R.id.listFolder).text = folder.path;
+        findViewById<TextView>(R.id.title).text = folder.name
+        findViewById<TextView>(R.id.description).text = folder.description
+        findViewById<TextView>(R.id.listFolder).text = folder.path
 
         val llpath : LinearLayout = findViewById(R.id.addImage)
 
