@@ -1,7 +1,10 @@
 package com.example.lesson_manager.models
 
-import java.io.File
-import java.io.Serializable
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.net.Uri
+import java.io.*
 
 class Fichier (
     var name:String,
@@ -31,7 +34,19 @@ class Fichier (
 
     val id : Int = ID++
 
-    fun saveFile() {
+    fun saveFile(img : Drawable): Uri? {
+        if (type == TYPE_FOLDER)
+            return null
+        val bitmap = (img as BitmapDrawable).bitmap
+        try {
+            val stream: OutputStream = FileOutputStream(File(path))
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.flush()
+            stream.close()
+        } catch (e:IOException) {
+            e.printStackTrace()
+        }
+        return Uri.parse(path)
         TODO("" +
                 "Partie à remplir coté insertion document" +
                 "A enregistrer :    Titre fichier -> Titre image" +
@@ -47,8 +62,9 @@ class Fichier (
         val folderToSearch = File(path).listFiles()
         var listReturn : ArrayList<Fichier> = arrayListOf()
         folderToSearch.forEach {
-            listReturn.add(if (it.extension == "") Fichier.folderToFichier(it) else Fichier.fileToFichier(it))
+            listReturn.add(if (it.extension == "") folderToFichier(it) else fileToFichier(it))
         }
+        listReturn = ArrayList(listReturn.sortedWith(FichierComparator))
         return listReturn
     }
 }

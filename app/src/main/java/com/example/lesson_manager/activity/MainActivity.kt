@@ -1,12 +1,12 @@
 package com.example.lesson_manager.activity
 
-import android.Manifest.permission
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -24,20 +24,29 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        folder= intent.getSerializableExtra(FolderListActivity.dir.absolutePath) as Fichier
+        folder= intent.getSerializableExtra(FolderListActivity.EXTRA_FOLDER) as Fichier
 
-        findViewById<TextView>(R.id.title).text = folder.name
-        findViewById<TextView>(R.id.description).text = folder.description
-        findViewById<TextView>(R.id.listFolder).text = folder.path
+        val titleView = findViewById<EditText>(R.id.addTitle)
+        val descView = findViewById<EditText>(R.id.addDesc)
+//        val imageView = findViewById<ImageView>(R.id.image)
 
-        val llpath : LinearLayout = findViewById(R.id.addImage)
+//        val llpath : LinearLayout = findViewById(R.id.addImage)
+//
+//        llpath.setOnClickListener {
+//            if (checkPermission(permission.READ_EXTERNAL_STORAGE, ADD_PICTURE_CODE)) {
+//                addPicture()
+//            }
+//        }
 
-        llpath.setOnClickListener {
-            if (checkPermission(permission.READ_EXTERNAL_STORAGE, ADD_PICTURE_CODE)) {
-                addPicture()
+        val confirmButton = findViewById<Button>(R.id.confirm_button)
+        confirmButton.setOnClickListener {
+            if (titleView.text.toString() == "" || descView.text.toString() == "") {
+                Toast.makeText(applicationContext,"Missing informations !",Toast.LENGTH_SHORT).show()
+            } else {
+                Fichier(titleView.text.toString(), descView.text.toString(), Fichier.TYPE_FILE, folder.path+"/"+titleView.text.toString()+".png").saveFile(resources.getDrawable(R.drawable.test_image))
+                super.finish()
             }
         }
-
 
     }
 

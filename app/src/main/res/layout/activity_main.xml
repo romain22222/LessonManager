@@ -15,13 +15,14 @@
         android:layout_height="wrap_content"
         android:layout_weight=".3"
         android:orientation="horizontal">
-        <TextView
+        <EditText
             android:id="@+id/addTitle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="TITRE"
+            android:hint="@string/title"
             android:textSize="35sp"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:inputType="text" />
     </LinearLayout>
 
     <LinearLayout
@@ -31,29 +32,15 @@
         android:orientation="horizontal"
         android:layout_weight="1"
         >
-        <TextView
+        <EditText
             android:id="@+id/addDesc"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="DESCRIPTION"
+            android:hint="@string/description"
             android:textSize="35sp"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:inputType="text"/>
 
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/listFolder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight=".3"
-        >
-
-        <Spinner
-            android:id="@+id/spinner2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:spinnerMode="dropdown"
-            />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/addImage"
@@ -91,10 +78,10 @@
 
         <Button
             android:id="@+id/confirm_button"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Enregistrer" />
+            android:text="@string/save" />
     </LinearLayout>
     <Space
         android:layout_width="wrap_content"

@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Lesson_Manager</string>
     <string name="baseHead">Lesson Manager</string>
+    <string name="folder_name">Folder Name</string>
+    <string name="title">TITLE</string>
+    <string name="description">DESCRIPTION</string>
+    <string name="save">Save</string>
 </resources>
