@@ -1,0 +1,8 @@
+Reste à faire :
+
+v faire image temporaire
+v enregistrer une image dans le stockage -> trouver pourquoi grosse compression de l'image
+- visualiser une image
+- récupérer et changer de thème via le serv (ou construire structure type pour ensuite l'exporter sur le serveur ?)
+- edit titre / description
+- enregistrer les descriptions dans un json

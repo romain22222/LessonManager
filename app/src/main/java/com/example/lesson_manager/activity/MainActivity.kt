@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                     titleView.text.toString(),
                     descView.text.toString(),
                     Fichier.TYPE_FILE,
-                    folder.path + "/" + titleView.text.toString() + ".jpg"
+                    folder.path + "/" + titleView.text.toString() + ".jpeg"
                 ).saveFile(toSave)
                 super.finish()
             }

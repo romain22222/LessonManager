@@ -39,7 +39,7 @@ class Fichier (
             return null
         try {
             val stream: OutputStream = FileOutputStream(File(path))
-            img.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            img.compress(Bitmap.CompressFormat.JPEG, 100, stream)
             stream.flush()
             stream.close()
         } catch (e:IOException) {
