@@ -5,4 +5,5 @@
     <string name="title">TITLE</string>
     <string name="description">DESCRIPTION</string>
     <string name="save">Save</string>
+    <string name="ERROR_upload">Error : can\'t create temp img in cache</string>
 </resources>

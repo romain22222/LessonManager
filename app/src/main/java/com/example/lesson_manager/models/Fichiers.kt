@@ -34,13 +34,12 @@ class Fichier (
 
     val id : Int = ID++
 
-    fun saveFile(img : Drawable): Uri? {
+    fun saveFile(img : Bitmap): Uri? {
         if (type == TYPE_FOLDER)
             return null
-        val bitmap = (img as BitmapDrawable).bitmap
         try {
             val stream: OutputStream = FileOutputStream(File(path))
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            img.compress(Bitmap.CompressFormat.PNG, 100, stream)
             stream.flush()
             stream.close()
         } catch (e:IOException) {
