@@ -5,4 +5,4 @@ v enregistrer une image dans le stockage -> trouver pourquoi grosse compression 
 - visualiser une image
 - récupérer et changer de thème via le serv (ou construire structure type pour ensuite l'exporter sur le serveur ?)
 - edit titre / description
-- enregistrer les descriptions dans un json
+v enregistrer les descriptions dans un json

@@ -1,8 +1,6 @@
 package com.example.lesson_manager.models
 
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import java.io.*
 
@@ -21,11 +19,12 @@ class Fichier (
         const val TYPE_FOLDER = "folder"
         const val TYPE_FILE = "file"
         var ID = 1
+        val descsFiles = JsonFichierAttachedStringStorage()
+
         fun fileToFichier(file: File) : Fichier {
             val path = file.absolutePath
-            return Fichier(path.substring(path.lastIndexOf("/")+1),"Recuperer du json la description du fichier", TYPE_FILE,path)
+            return Fichier(path.substring(path.lastIndexOf("/")+1),JsonFichierAttachedStringStorage.getDesc(path), TYPE_FILE,path)
         }
-
         fun folderToFichier(file: File) : Fichier {
             val path = file.absolutePath
             return Fichier(path.substring(path.lastIndexOf("/")+1),"", TYPE_FOLDER,path)
@@ -42,15 +41,11 @@ class Fichier (
             img.compress(Bitmap.CompressFormat.JPEG, 100, stream)
             stream.flush()
             stream.close()
+            JsonFichierAttachedStringStorage.setDesc(path,description)
         } catch (e:IOException) {
             e.printStackTrace()
         }
         return Uri.parse(path)
-        TODO("" +
-                "Partie à remplir coté insertion document" +
-                "A enregistrer :    Titre fichier -> Titre image" +
-                "                   Description fichier -> Description image dans le json" +
-                "                   Path -> Endroit du stockage de l'image")
     }
 
 

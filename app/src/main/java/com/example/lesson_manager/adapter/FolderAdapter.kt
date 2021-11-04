@@ -19,7 +19,7 @@ abstract class FolderAdapter(val folders : MutableList<Fichier>) :
     abstract fun onItemClick(view: View)
     abstract fun onLongItemClick(view: View): Boolean
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_folder,parent,false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_folder,parent, false)
         view.setOnClickListener{view -> onItemClick(view)}
         view.setOnLongClickListener{view -> onLongItemClick(view)}
         return FolderHolder(view)
