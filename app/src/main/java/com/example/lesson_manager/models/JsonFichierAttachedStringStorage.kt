@@ -30,6 +30,43 @@ class JsonFichierAttachedStringStorage {
             }
             return json
         }
+        fun deleteDesc(path: String) {
+            deleteDescRec(
+                path.replace(FolderListActivity.ROOT_DIRECTORY.absolutePath+"/", ""),
+                jsonDescStorage
+            )
+            File(FolderListActivity.ROOT_DIRECTORY.parent + "/descStorage.json").writeText(
+                jsonDescStorage.toString()
+            )
+        }
+
+        private fun deleteDescRec(path: String, json: JSONObject): JSONObject {
+            if (path.indexOf("/") != -1) {
+                json.put(
+                    path.substring(0, path.indexOf("/")),
+                    deleteDescRec(
+                        path.substring(path.indexOf("/") + 1),
+                        json.get(path.substring(0, path.indexOf("/"))) as JSONObject
+                    )
+                )
+            } else {
+                json.remove(path)
+            }
+            return json
+        }
+
+        fun changeTitle(oldPath: String, newPath: String) {
+            val descContent = getDesc(oldPath)
+            jsonDescStorage = setDescRec(
+                newPath.replace(FolderListActivity.ROOT_DIRECTORY.absolutePath+"/", ""),
+                jsonDescStorage,
+                descContent
+            )
+            deleteDesc(oldPath)
+            File(FolderListActivity.ROOT_DIRECTORY.parent + "/descStorage.json").writeText(
+                jsonDescStorage.toString()
+            )
+        }
 
         fun setDesc(imgPath: String, descContent: String) {
             jsonDescStorage = setDescRec(
