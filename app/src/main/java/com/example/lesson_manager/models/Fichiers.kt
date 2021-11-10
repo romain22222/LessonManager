@@ -19,7 +19,6 @@ class Fichier (
         const val TYPE_FOLDER = "folder"
         const val TYPE_FILE = "file"
         var ID = 1
-        val descsFiles = JsonFichierAttachedStringStorage()
 
         fun fileToFichier(file: File) : Fichier {
             val path = file.absolutePath
@@ -60,5 +59,28 @@ class Fichier (
         }
         listReturn = ArrayList(listReturn.sortedWith(FichierComparator))
         return listReturn
+    }
+
+    fun changeTitle(newTitle: String) {
+        val newPath = File(path).parent + "$newTitle.jpeg"
+        try {
+            File(path).copyTo(File(newPath)).absolutePath
+        } catch (e:IOException) {
+            e.printStackTrace()
+        } catch (e:FileAlreadyExistsException) {
+            return
+        } catch (e:NoSuchFileException) {
+            e.printStackTrace()
+        }
+        JsonFichierAttachedStringStorage.changeTitle(path, newPath)
+        File(path).delete()
+        name = "$newTitle.jpeg"
+        path = newPath
+        description = JsonFichierAttachedStringStorage.getDesc(path)
+    }
+
+    fun changeDesc(newDesc: String) {
+        JsonFichierAttachedStringStorage.setDesc(path, newDesc)
+        description=newDesc
     }
 }

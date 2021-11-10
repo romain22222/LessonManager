@@ -1,5 +1,6 @@
 package com.example.lesson_manager.activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
@@ -8,10 +9,18 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.example.lesson_manager.R
 import com.example.lesson_manager.adapter.FolderAdapter
 import com.example.lesson_manager.models.Fichier
+import com.example.lesson_manager.models.Fichier.Companion.folderToFichier
+import com.example.lesson_manager.models.JsonFichierAttachedStringStorage
+import org.json.JSONObject
 import java.io.File
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class FolderListActivity : AppCompatActivity() {
@@ -19,11 +28,47 @@ class FolderListActivity : AppCompatActivity() {
         const val EXTRA_FOLDER = "EXTRA_FOLDER"
         val ROOT_DIRECTORY =
             File(Environment.getDataDirectory(), "/data/com.example.lesson_manager/userData")
+        var isReady = false
+
+
     }
 
     var files: ArrayList<Fichier> = arrayListOf()
-    lateinit var list: RecyclerView
+    private lateinit var list: RecyclerView
     var dir = ROOT_DIRECTORY
+
+    private fun initIfNeeded(context: Context) {
+        if (folderToFichier(ROOT_DIRECTORY).getChildrenOfFolder().isEmpty()) {
+            val queue = Volley.newRequestQueue(context)
+            val request = JsonObjectRequest(
+                Request.Method.GET,
+                "http://os-vps418.infomaniak.ch:1186/i507_1_1/structureType.json",
+                null,
+                { response ->
+                    resolveRequest(response)
+                },
+                {
+                    resolveRequest(null)
+                }
+            )
+            queue.add(request)
+            queue.start()
+        } else {
+            populateRecyclerFolder()
+            isReady = true
+        }
+    }
+
+    private fun resolveRequest(response: JSONObject?) {
+        if (response !== null) {
+            for (key in response.keys()) {
+                File(ROOT_DIRECTORY.absolutePath + "/" + key).mkdirs()
+            }
+        }
+        JsonFichierAttachedStringStorage()
+        isReady = true
+        populateRecyclerFolder()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,12 +76,14 @@ class FolderListActivity : AppCompatActivity() {
         if (!dir.exists()) {
             dir.mkdirs()
         }
-        populateRecyclerFolder()
+        initIfNeeded(applicationContext)
     }
 
     override fun onResume() {
         super.onResume()
-        populateRecyclerFolder()
+        if (isReady) {
+            populateRecyclerFolder()
+        }
     }
 
     private fun populateRecyclerFolder() {
@@ -58,7 +105,7 @@ class FolderListActivity : AppCompatActivity() {
             }
         }
         files = Fichier("", "", "folder", path).getChildrenOfFolder()
-        list = findViewById<RecyclerView>(R.id.folder_list)
+        list = findViewById(R.id.folder_list)
         list.adapter = object : FolderAdapter(files) {
             override fun onItemClick(view: View) {
                 val textAndId = view.findViewById<TextView>(R.id.folder_name)
@@ -74,7 +121,10 @@ class FolderListActivity : AppCompatActivity() {
             }
 
             override fun onLongItemClick(view: View): Boolean {
-                TODO("Not yet implemented")
+                val textAndId = view.findViewById<TextView>(R.id.folder_name)
+                val clickedFile = folders.first { it.name == textAndId.text }
+                showPopupDeleteItem(clickedFile)
+                return true
             }
         }
     }
@@ -88,20 +138,44 @@ class FolderListActivity : AppCompatActivity() {
         }
     }
 
-    // TODO : Faire une autre activity qui contient le menu : https://developer.android.com/guide/topics/ui/menus.html#PopupMenu
-    fun showPopup(v: View) {
+    fun showPopupDeleteItem(file : Fichier) {
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        builder.setTitle(String.format("Delete %s : %s ?",file.type,file.name))
+        val dialogLayout = inflater.inflate(R.layout.dialog_delete_item, null)
+        builder.setView(dialogLayout)
+        builder.setNegativeButton("Cancel") { _, _ ->
+            Toast.makeText(applicationContext, "Action cancelled", Toast.LENGTH_SHORT).show()
+        }
+        builder.setPositiveButton("Delete") { _, _ ->
+            JsonFichierAttachedStringStorage.deleteDesc(file.path)
+            File(file.path).delete()
+            Toast.makeText(
+                applicationContext,
+                String.format("%s %s deleted !",
+                    file.type.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+                    file.name
+                ),
+                Toast.LENGTH_LONG
+            ).show()
+            populateRecyclerFolder()
+        }
+        builder.show()
+    }
+
+    fun showPopupNewFolder(v: View) {
         PopupMenu(this, v).apply {
-            setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
+            setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.new_folder -> {
-                        withEditText(v)
+                        withEditText()
                         true
                     }
                     R.id.new_file -> {
                         val intent = Intent(applicationContext, MainActivity::class.java).apply {
                             putExtra(
                                 EXTRA_FOLDER,
-                                Fichier("","",Fichier.TYPE_FOLDER, dir.absolutePath)
+                                Fichier("", "", Fichier.TYPE_FOLDER, dir.absolutePath)
                             )
                         }
                         startActivity(intent)
@@ -109,25 +183,30 @@ class FolderListActivity : AppCompatActivity() {
                     }
                     else -> false
                 }
-            })
+            }
             inflate(R.menu.menu_new_fichier)
             show()
         }
     }
-    fun withEditText(view: View) {
+
+    private fun withEditText() {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         builder.setTitle("New Folder")
-        val dialogLayout = inflater.inflate(R.layout.dialog_new_folder,null)
+        val dialogLayout = inflater.inflate(R.layout.dialog_new_folder, null)
         val editText = dialogLayout.findViewById<EditText>(R.id.string_new_folder)
         builder.setView(dialogLayout)
         builder.setNegativeButton("Cancel") { _, _ ->
-            Toast.makeText(applicationContext,"Action cancelled", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, "Action cancelled", Toast.LENGTH_SHORT).show()
         }
         builder.setPositiveButton("Create") { _, _ ->
-            if (!File(dir.absolutePath+"/"+editText.text.toString()).exists()) {
-                File(dir.absolutePath+"/"+editText.text.toString()).mkdirs()
-                Toast.makeText(applicationContext,"The folder " + editText.text.toString() + " has been created !", Toast.LENGTH_SHORT).show()
+            if (!File(dir.absolutePath + "/" + editText.text.toString()).exists()) {
+                File(dir.absolutePath + "/" + editText.text.toString()).mkdirs()
+                Toast.makeText(
+                    applicationContext,
+                    "The folder " + editText.text.toString() + " has been created !",
+                    Toast.LENGTH_LONG
+                ).show()
                 populateRecyclerFolder()
             }
         }

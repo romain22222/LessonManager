@@ -63,6 +63,6 @@
         android:layout_margin="16dp"
         android:src="@drawable/add_file_icon"
         android:tint="@color/white"
-        android:onClick="showPopup"/>
+        android:onClick="showPopupNewFolder"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
