@@ -62,7 +62,7 @@ class Fichier (
     }
 
     fun changeTitle(newTitle: String) {
-        val newPath = File(path).parent + "$newTitle.jpeg"
+        val newPath = File(path).parent + "/" + "$newTitle.jpeg"
         try {
             File(path).copyTo(File(newPath)).absolutePath
         } catch (e:IOException) {

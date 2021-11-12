@@ -1,8 +1,5 @@
 package com.example.lesson_manager.models
 
-import com.android.volley.Request
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.example.lesson_manager.activity.FolderListActivity
 import com.example.lesson_manager.models.Fichier.Companion.folderToFichier
 import org.json.JSONObject
@@ -33,6 +30,7 @@ class JsonFichierAttachedStringStorage {
             }
             return json
         }
+
         fun deleteDesc(path: String) {
             deleteDescRec(
                 path.replace(FolderListActivity.ROOT_DIRECTORY.absolutePath+"/", ""),
@@ -70,7 +68,32 @@ class JsonFichierAttachedStringStorage {
                 jsonDescStorage.toString()
             )
         }
-
+        fun createFolder(path: String) {
+            jsonDescStorage = createFolderRec(
+                path.replace(FolderListActivity.ROOT_DIRECTORY.absolutePath+"/", ""),
+                jsonDescStorage
+            )
+            File(FolderListActivity.ROOT_DIRECTORY.parent + "/descStorage.json").writeText(
+                jsonDescStorage.toString()
+            )
+        }
+        private fun createFolderRec(path: String, json: JSONObject) : JSONObject {
+            if (path.indexOf("/") != -1) {
+                json.put(
+                    path.substring(0, path.indexOf("/")),
+                    createFolderRec(
+                        path.substring(path.indexOf("/") + 1),
+                        json.get(path.substring(0, path.indexOf("/"))) as JSONObject
+                    )
+                )
+            } else {
+                json.put(
+                    path,
+                    JSONObject()
+                )
+            }
+            return json
+        }
         fun setDesc(imgPath: String, descContent: String) {
             jsonDescStorage = setDescRec(
                 imgPath.replace(FolderListActivity.ROOT_DIRECTORY.absolutePath+"/", ""),
@@ -118,6 +141,8 @@ class JsonFichierAttachedStringStorage {
                 ).getJSONObject(path.substring(path.lastIndexOf("/") + 1))
             }
         }
+
+
     }
 
 }

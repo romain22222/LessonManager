@@ -26,6 +26,7 @@ import kotlin.collections.ArrayList
 class FolderListActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_FOLDER = "EXTRA_FOLDER"
+        const val EXTRA_FILE = "EXTRA_FILE"
         val ROOT_DIRECTORY =
             File(Environment.getDataDirectory(), "/data/com.example.lesson_manager/userData")
         var isReady = false
@@ -116,7 +117,13 @@ class FolderListActivity : AppCompatActivity() {
                     populateRecyclerFolder()
                     notifyDataSetChanged()
                 } else if (clickedFile.type == Fichier.TYPE_FILE) {
-                    val test = "nothing"
+                    val intent = Intent(applicationContext, VisualisationFileActivity::class.java).apply {
+                        putExtra(
+                            EXTRA_FILE,
+                            clickedFile
+                        )
+                    }
+                    startActivity(intent)
                 }
             }
 
@@ -202,6 +209,7 @@ class FolderListActivity : AppCompatActivity() {
         builder.setPositiveButton("Create") { _, _ ->
             if (!File(dir.absolutePath + "/" + editText.text.toString()).exists()) {
                 File(dir.absolutePath + "/" + editText.text.toString()).mkdirs()
+                JsonFichierAttachedStringStorage.createFolder(dir.absolutePath + "/" + editText.text.toString())
                 Toast.makeText(
                     applicationContext,
                     "The folder " + editText.text.toString() + " has been created !",
