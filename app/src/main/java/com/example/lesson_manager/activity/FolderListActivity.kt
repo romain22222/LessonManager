@@ -149,7 +149,7 @@ class FolderListActivity : AppCompatActivity() {
         }
         builder.setPositiveButton("Delete") { _, _ ->
             JsonFichierAttachedStringStorage.deleteDesc(file.path)
-            File(file.path).delete()
+            File(file.path).deleteRecursively()
             Toast.makeText(
                 applicationContext,
                 String.format("%s %s deleted !",
