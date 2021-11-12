@@ -1,7 +1,7 @@
 Reste à faire :
 
 v faire image temporaire
-v enregistrer une image dans le stockage -> trouver pourquoi grosse compression de l'image -> faut refaire toute la prise de photos
+- enregistrer une image dans le stockage -> trouver pourquoi grosse compression de l'image -> faut refaire toute la prise de photos
 - visualiser une image -> visu assez simple
 v construire structure type pour ensuite l'exporter sur le serveur : récup la structure si besoin
 - edit titre / description -> back prêt
